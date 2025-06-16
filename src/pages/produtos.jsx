@@ -1,4 +1,5 @@
-import Card from "../components/card";
+import Card from "../components/Card";
+import ProductForm from "../components/ProductForm";
 const Produtos = () => {
   return (
     <>
@@ -14,6 +15,7 @@ const Produtos = () => {
    <Card>
     
    </Card>
+   <ProductForm/>
     </>
   );
 };

@@ -4,7 +4,7 @@ export default function Card() {
       <a href="#">
         <img
           className="rounded-t-lg"
-          src="/docs/images/blog/image-1.jpg"
+          src="https://m.media-amazon.com/images/I/61bh+T2v7SL._AC_SX342_SY445_.jpg"
           alt="Imagem do produto"
         />
       </a>
