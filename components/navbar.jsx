@@ -48,6 +48,12 @@ export default function Navbar() {
              <Link href="/carrinho" className="text-lg font-medium text-green-800 hover:text-green-600">
               Carrinho
             </Link>
+             <Link href="/login" className="text-lg font-medium text-green-800 hover:text-green-600">
+              Login
+            </Link>
+            <Link href="/admin" className="text-lg font-medium text-green-800 hover:text-green-600">
+              Admin
+            </Link>
           </div>
 
           {/* 3) Espelho à direita */}

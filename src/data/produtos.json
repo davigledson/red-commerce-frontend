@@ -1,0 +1,47 @@
+[
+  {
+    "id": "1",
+    "name": "Hortelã",
+    "description": "Excelente para chás, sucos e temperos, com aroma refrescante.",
+    "price": 15.0,
+    "image": "/imgs/planta.png",
+    "category": ["Ervas", "Culinária", "Fragrância"],
+    "store": "Horta da Esquina"
+  },
+  {
+    "id": "2",
+    "name": "Alecrim",
+    "description": "Sabor marcante, ótimo para assados e decoração de pratos.",
+    "price": 18.0,
+    "image": "/imgs/planta.png",
+    "category": ["Ervas", "Culinária", "Aromática"],
+    "store": "Horta da Esquina"
+  },
+  {
+    "id": "3",
+    "name": "Manjericão",
+    "description": "Folhas macias, perfeito para molhos, saladas e pesto.",
+    "price": 20.0,
+    "image": "/imgs/planta.png",
+    "category": ["Ervas", "Culinária", "Temperos"],
+    "store": "Horta da Esquina"
+  },
+  {
+    "id": "4",
+    "name": "Samambaia",
+    "description": "Planta ornamental de folhagem delicada, ideal para ambientes internos.",
+    "price": 25.0,
+    "image": "/imgs/planta.png",
+    "category": ["Ornamentais", "Interiores", "Folhagens"],
+    "store": "Horta da Esquina"
+  },
+  {
+    "id": "5",
+    "name": "Cacto Echinopsis",
+    "description": "Pequeno cacto de fácil cultivo, floresce regularmente.",
+    "price": 22.0,
+    "image": "/imgs/planta.png",
+    "category": ["Suculentas", "Ornamentais", "Baixa Manutenção"],
+    "store": "Horta da Esquina"
+  }
+]
