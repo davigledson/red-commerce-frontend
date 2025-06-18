@@ -1,7 +1,7 @@
-import Card from '../../../components/card'
+import Card from '../../../components/CardProduto'
 export default function login(){
  return <>
 
- <Card></Card>
+
  </>
 }
