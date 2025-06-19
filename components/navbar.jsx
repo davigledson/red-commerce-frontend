@@ -41,7 +41,7 @@ export default function Navbar() {
 
           {/* Links centralizados */}
           <div className="flex-1 flex justify-center space-x-8">
-            {['Home','Produtos','Contato','Carrinho','Login','Admin','Perfil'].map((text) => (
+            {['Home','Produtos','Contato','Carrinho','Login','Cadastro','Admin','Perfil'].map((text) => (
               <Link
                 key={text}
                 href={`/${text.toLowerCase()}`}

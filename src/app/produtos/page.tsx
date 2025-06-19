@@ -1,5 +1,6 @@
 import CardProduto from '@/components/CardProduto';
 import Banner from '@/components/Banner';
+import FilterSidebar from '@/components/FilterSidebar';
 
 export default function Produtos() {
   return (
@@ -11,40 +12,50 @@ export default function Produtos() {
         imagem="banner1.jpg"
       />
 
-      {/* Grid com os cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-        <CardProduto nome="Hortelã" especie="(Mentha spicata)" preco="40,00" imagem="planta.png" />
-        <CardProduto nome="Hortelã" especie="(Mentha spicata)" preco="40,00" imagem="planta.png" />
-        <CardProduto nome="Hortelã" especie="(Mentha spicata)" preco="40,00" imagem="planta.png" />
-        <CardProduto nome="Hortelã" especie="(Mentha spicata)" preco="40,00" imagem="planta.png" />
-        <CardProduto nome="Hortelã" especie="(Mentha spicata)" preco="40,00" imagem="planta.png" />
-        <CardProduto nome="Hortelã" especie="(Mentha spicata)" preco="40,00" imagem="planta.png" />
-         <CardProduto nome="Hortelã" especie="(Mentha spicata)" preco="40,00" imagem="planta.png" />
-        <CardProduto nome="Hortelã" especie="(Mentha spicata)" preco="40,00" imagem="planta.png" />
-        <CardProduto nome="Hortelã" especie="(Mentha spicata)" preco="40,00" imagem="planta.png" />
-        <CardProduto nome="Hortelã" especie="(Mentha spicata)" preco="40,00" imagem="planta.png" />
-        <CardProduto nome="Hortelã" especie="(Mentha spicata)" preco="40,00" imagem="planta.png" />
-        <CardProduto nome="Hortelã" especie="(Mentha spicata)" preco="40,00" imagem="planta.png" />
-         <CardProduto nome="Hortelã" especie="(Mentha spicata)" preco="40,00" imagem="planta.png" />
-        <CardProduto nome="Hortelã" especie="(Mentha spicata)" preco="40,00" imagem="planta.png" />
-        <CardProduto nome="Hortelã" especie="(Mentha spicata)" preco="40,00" imagem="planta.png" />
-        <CardProduto nome="Hortelã" especie="(Mentha spicata)" preco="40,00" imagem="planta.png" />
-        <CardProduto nome="Hortelã" especie="(Mentha spicata)" preco="40,00" imagem="planta.png" />
-        <CardProduto nome="Hortelã" especie="(Mentha spicata)" preco="40,00" imagem="planta.png" />
-         <CardProduto nome="Hortelã" especie="(Mentha spicata)" preco="40,00" imagem="planta.png" />
-        <CardProduto nome="Hortelã" especie="(Mentha spicata)" preco="40,00" imagem="planta.png" />
-        <CardProduto nome="Hortelã" especie="(Mentha spicata)" preco="40,00" imagem="planta.png" />
-        <CardProduto nome="Hortelã" especie="(Mentha spicata)" preco="40,00" imagem="planta.png" />
-        <CardProduto nome="Hortelã" especie="(Mentha spicata)" preco="40,00" imagem="planta.png" />
-        <CardProduto nome="Hortelã" especie="(Mentha spicata)" preco="40,00" imagem="planta.png" />
-         <CardProduto nome="Hortelã" especie="(Mentha spicata)" preco="40,00" imagem="planta.png" />
-        <CardProduto nome="Hortelã" especie="(Mentha spicata)" preco="40,00" imagem="planta.png" />
-        <CardProduto nome="Hortelã" especie="(Mentha spicata)" preco="40,00" imagem="planta.png" />
-        <CardProduto nome="Hortelã" especie="(Mentha spicata)" preco="40,00" imagem="planta.png" />
-        <CardProduto nome="Hortelã" especie="(Mentha spicata)" preco="40,00" imagem="planta.png" />
-        <CardProduto nome="Hortelã" especie="(Mentha spicata)" preco="40,00" imagem="planta.png" />
+      {/* Layout com sidebar fixo */}
+      <div className="flex gap-6">
+        {/* Sidebar fixo no lado esquerdo */}
+        <div className="w-64 flex-shrink-0">
+          <div className="sticky top-6">
+            <FilterSidebar />
+          </div>
+        </div>
 
-        {/* …outros CardProduto */}
+        {/* Conteúdo principal com grid de produtos */}
+        <div className="flex-1">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <CardProduto nome="Hortelã" especie="(Mentha spicata)" preco="40,00" imagem="planta.png" />
+            <CardProduto nome="Hortelã" especie="(Mentha spicata)" preco="40,00" imagem="planta.png" />
+            <CardProduto nome="Hortelã" especie="(Mentha spicata)" preco="40,00" imagem="planta.png" />
+            <CardProduto nome="Hortelã" especie="(Mentha spicata)" preco="40,00" imagem="planta.png" />
+            <CardProduto nome="Hortelã" especie="(Mentha spicata)" preco="40,00" imagem="planta.png" />
+            <CardProduto nome="Hortelã" especie="(Mentha spicata)" preco="40,00" imagem="planta.png" />
+            <CardProduto nome="Hortelã" especie="(Mentha spicata)" preco="40,00" imagem="planta.png" />
+            <CardProduto nome="Hortelã" especie="(Mentha spicata)" preco="40,00" imagem="planta.png" />
+            <CardProduto nome="Hortelã" especie="(Mentha spicata)" preco="40,00" imagem="planta.png" />
+            <CardProduto nome="Hortelã" especie="(Mentha spicata)" preco="40,00" imagem="planta.png" />
+            <CardProduto nome="Hortelã" especie="(Mentha spicata)" preco="40,00" imagem="planta.png" />
+            <CardProduto nome="Hortelã" especie="(Mentha spicata)" preco="40,00" imagem="planta.png" />
+            <CardProduto nome="Hortelã" especie="(Mentha spicata)" preco="40,00" imagem="planta.png" />
+            <CardProduto nome="Hortelã" especie="(Mentha spicata)" preco="40,00" imagem="planta.png" />
+            <CardProduto nome="Hortelã" especie="(Mentha spicata)" preco="40,00" imagem="planta.png" />
+            <CardProduto nome="Hortelã" especie="(Mentha spicata)" preco="40,00" imagem="planta.png" />
+            <CardProduto nome="Hortelã" especie="(Mentha spicata)" preco="40,00" imagem="planta.png" />
+            <CardProduto nome="Hortelã" especie="(Mentha spicata)" preco="40,00" imagem="planta.png" />
+            <CardProduto nome="Hortelã" especie="(Mentha spicata)" preco="40,00" imagem="planta.png" />
+            <CardProduto nome="Hortelã" especie="(Mentha spicata)" preco="40,00" imagem="planta.png" />
+            <CardProduto nome="Hortelã" especie="(Mentha spicata)" preco="40,00" imagem="planta.png" />
+            <CardProduto nome="Hortelã" especie="(Mentha spicata)" preco="40,00" imagem="planta.png" />
+            <CardProduto nome="Hortelã" especie="(Mentha spicata)" preco="40,00" imagem="planta.png" />
+            <CardProduto nome="Hortelã" especie="(Mentha spicata)" preco="40,00" imagem="planta.png" />
+            <CardProduto nome="Hortelã" especie="(Mentha spicata)" preco="40,00" imagem="planta.png" />
+            <CardProduto nome="Hortelã" especie="(Mentha spicata)" preco="40,00" imagem="planta.png" />
+            <CardProduto nome="Hortelã" especie="(Mentha spicata)" preco="40,00" imagem="planta.png" />
+            <CardProduto nome="Hortelã" especie="(Mentha spicata)" preco="40,00" imagem="planta.png" />
+            <CardProduto nome="Hortelã" especie="(Mentha spicata)" preco="40,00" imagem="planta.png" />
+            <CardProduto nome="Hortelã" especie="(Mentha spicata)" preco="40,00" imagem="planta.png" />
+          </div>
+        </div>
       </div>
     </div>
   );

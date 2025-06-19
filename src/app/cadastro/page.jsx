@@ -4,7 +4,8 @@ import { useState } from 'react';
 export default function Login() {
   const [formData, setFormData] = useState({
     email: '',
-    password: ''
+    password: '',
+    confirmPassword: ''
   });
 
   const handleChange = (e) => {
@@ -14,8 +15,8 @@ export default function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Aqui você pode adicionar a lógica de login
-    console.log('Login submitted:', formData);
+    // Aqui você pode adicionar a lógica de login/registro
+    console.log('Form submitted:', formData);
   };
 
   return (
@@ -28,8 +29,8 @@ export default function Login() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
             </svg>
           </div>
-          <h2 className="text-2xl font-bold text-white">Bem-vindo de volta!</h2>
-          <p className="text-green-100 mt-2">Entre na sua conta</p>
+          <h2 className="text-2xl font-bold text-white">Criar Conta</h2>
+          <p className="text-green-100 mt-2">Junte-se à nossa comunidade</p>
         </div>
 
         {/* Formulário */}
@@ -76,20 +77,42 @@ export default function Login() {
             </div>
           </div>
 
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
+          <div>
+            <label htmlFor="confirmPassword" className="block mb-2 text-sm font-semibold text-gray-700">
+              Confirmar Senha
+            </label>
+            <div className="relative">
               <input
-                id="remember"
+                type="password"
+                id="confirmPassword"
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
+                placeholder="••••••••"
+                required
+              />
+              <svg className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+          </div>
+
+          <div className="flex items-start">
+            <div className="flex items-center h-5">
+              <input
+                id="terms"
                 type="checkbox"
                 className="w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2"
+                required
               />
-              <label htmlFor="remember" className="ml-2 text-sm text-gray-600">
-                Lembrar de mim
-              </label>
             </div>
-            <a href="#" className="text-sm text-green-600 hover:underline font-medium">
-              Esqueceu a senha?
-            </a>
+            <label htmlFor="terms" className="ml-2 text-sm text-gray-600">
+              Eu concordo com os{' '}
+              <a href="#" className="text-green-600 hover:underline font-medium">
+                termos e condições
+              </a>
+            </label>
           </div>
 
           <button
@@ -97,16 +120,16 @@ export default function Login() {
             onClick={handleSubmit}
             className="w-full bg-gradient-to-r from-green-500 to-blue-500 text-white py-3 rounded-lg font-semibold hover:from-green-600 hover:to-blue-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transform hover:scale-[1.02] transition-all duration-200 shadow-lg"
           >
-            Entrar
+            Criar Conta
           </button>
         </div>
 
         {/* Footer do Card */}
         <div className="px-6 pb-6 text-center">
           <p className="text-gray-600 text-sm">
-            Não tem uma conta?{' '}
+            Já tem uma conta?{' '}
             <a href="#" className="text-green-600 hover:underline font-medium">
-              Cadastre-se
+              Faça login
             </a>
           </p>
         </div>
