@@ -4,7 +4,7 @@
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
 
-export default function CartPage() {
+export default function Comprar() {
   // Estado inicial com dados de exemplo
   const [items, setItems] = useState([
     {
