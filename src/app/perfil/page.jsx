@@ -1,6 +1,6 @@
 "use client";
 import { useState } from 'react';
-
+import DataTable from '@/components/DataTable';
 export default function UserProfile() {
   const [formData, setFormData] = useState({
     name: 'João Silva',
@@ -51,6 +51,91 @@ export default function UserProfile() {
     totalSpent: 1250.90,
     reviewsWritten: 12
   };
+
+  // Dados dos pedidos
+  const orders = [
+    {
+      id: '#001',
+      date: '15/06/2025',
+      items: 'Samambaia, Suculenta Jade',
+      total: 89.90,
+      status: 'Entregue',
+      statusColor: 'bg-green-100 text-green-800'
+    },
+    {
+      id: '#002',
+      date: '20/06/2025',
+      items: 'Monstera Deliciosa, Vaso Cerâmica',
+      total: 156.50,
+      status: 'Em Trânsito',
+      statusColor: 'bg-blue-100 text-blue-800'
+    },
+    {
+      id: '#003',
+      date: '22/06/2025',
+      items: 'Fertilizante Orgânico, Substrato',
+      total: 45.20,
+      status: 'Processando',
+      statusColor: 'bg-yellow-100 text-yellow-800'
+    }
+  ];
+
+  // Dados do carrinho
+  const cartItems = [
+    {
+      id: 1,
+      name: 'Ficus Lyrata',
+      price: 129.90,
+      quantity: 1,
+      image: '🌿'
+    },
+    {
+      id: 2,
+      name: 'Vaso Decorativo Grande',
+      price: 85.00,
+      quantity: 2,
+      image: '🏺'
+    },
+    {
+      id: 3,
+      name: 'Kit Ferramentas Jardinagem',
+      price: 67.50,
+      quantity: 1,
+      image: '🛠️'
+    }
+  ];
+
+  // Dados dos favoritos
+  const favorites = [
+    {
+      id: 1,
+      name: 'Costela de Adão',
+      price: 89.90,
+      store: 'Verde Vida',
+      image: '🌱'
+    },
+    {
+      id: 2,
+      name: 'Espada de São Jorge',
+      price: 45.00,
+      store: 'Plantas & Cia',
+      image: '🌿'
+    },
+    {
+      id: 3,
+      name: 'Palmeira Ráfia',
+      price: 199.90,
+      store: 'Garden Center',
+      image: '🌴'
+    },
+    {
+      id: 4,
+      name: 'Cacto Mandacaru',
+      price: 35.50,
+      store: 'Suculentas Brasil',
+      image: '🌵'
+    }
+  ];
 
   return (
     <div className="min-h-screen mt-25 bg-gradient-to-br from-green-50 to-blue-50">
@@ -136,26 +221,58 @@ export default function UserProfile() {
           {/* Tabs */}
           <div className="border-b border-gray-200">
             <nav className="flex space-x-8 px-8">
-              <button
-                onClick={() => setActiveTab('personal')}
-                className={`py-4 px-1 border-b-2 font-medium text-sm ${
-                  activeTab === 'personal'
-                    ? 'border-green-500 text-green-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                }`}
-              >
-                Informações Pessoais
-              </button>
-              <button
-                onClick={() => setActiveTab('settings')}
-                className={`py-4 px-1 border-b-2 font-medium text-sm ${
-                  activeTab === 'settings'
-                    ? 'border-green-500 text-green-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                }`}
-              >
-                Configurações
-              </button>
+            <nav className="flex space-x-8 px-8">
+  <button
+    onClick={() => setActiveTab('personal')}
+    className={`py-4 px-1 border-b-2 font-medium text-sm ${
+      activeTab === 'personal'
+        ? 'border-green-500 text-green-600'
+        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+    }`}
+  >
+    Informações Pessoais
+  </button>
+  <button
+    onClick={() => setActiveTab('orders')}
+    className={`py-4 px-1 border-b-2 font-medium text-sm ${
+      activeTab === 'orders'
+        ? 'border-green-500 text-green-600'
+        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+    }`}
+  >
+    Meus Pedidos
+  </button>
+  <button
+    onClick={() => setActiveTab('cart')}
+    className={`py-4 px-1 border-b-2 font-medium text-sm ${
+      activeTab === 'cart'
+        ? 'border-green-500 text-green-600'
+        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+    }`}
+  >
+    Meu Carrinho
+  </button>
+  <button
+    onClick={() => setActiveTab('favorites')}
+    className={`py-4 px-1 border-b-2 font-medium text-sm ${
+      activeTab === 'favorites'
+        ? 'border-green-500 text-green-600'
+        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+    }`}
+  >
+    Favoritos
+  </button>
+  <button
+    onClick={() => setActiveTab('settings')}
+    className={`py-4 px-1 border-b-2 font-medium text-sm ${
+      activeTab === 'settings'
+        ? 'border-green-500 text-green-600'
+        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+    }`}
+  >
+    Configurações
+  </button>
+</nav>
             </nav>
           </div>
 
@@ -254,6 +371,332 @@ export default function UserProfile() {
               </div>
             )}
 
+            {activeTab === 'history' && (
+              <div className="space-y-8">
+                {/* Pedidos */}
+                <div>
+                  <h3 className="text-2xl font-semibold text-gray-900 mb-6">Meus Pedidos</h3>
+                  <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+                    <div className="overflow-x-auto">
+                      <DataTable
+  columns={[
+    { key: 'id', title: 'Pedido' },
+    { key: 'date', title: 'Data' },
+    { key: 'items', title: 'Itens', whitespace: 'whitespace-normal' },
+    { key: 'total', title: 'Total', render: (value) => `R$ ${value.toFixed(2)}` },
+    { 
+      key: 'status', 
+      title: 'Status', 
+      render: (value, row) => (
+        <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${row.statusColor}`}>
+          {value}
+        </span>
+      )
+    }
+  ]}
+  data={orders}
+/>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Carrinho */}
+                <div>
+                  <h3 className="text-2xl font-semibold text-gray-900 mb-6">Carrinho de Compras</h3>
+                  <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+                    <div className="overflow-x-auto">
+                     <DataTable
+  columns={[
+    { 
+      key: 'name', 
+      title: 'Produto', 
+      render: (value, row) => (
+        <div className="flex items-center">
+          <span className="text-2xl mr-3">{row.image}</span>
+          <span className="text-sm font-medium text-gray-900">{value}</span>
+        </div>
+      )
+    },
+    { key: 'price', title: 'Preço', render: (value) => `R$ ${value.toFixed(2)}` },
+    { key: 'quantity', title: 'Quantidade' },
+    { 
+      key: 'subtotal', 
+      title: 'Subtotal', 
+      render: (_, row) => `R$ ${(row.price * row.quantity).toFixed(2)}` 
+    }
+  ]}
+  data={cartItems}
+  rowActions={(row) => (
+    <button className="text-red-600 hover:text-red-900">Remover</button>
+  )}
+  showFooter
+  footerContent={
+    <div className="flex justify-between items-center">
+      <span className="text-lg font-semibold text-gray-900">Total:</span>
+      <span className="text-lg font-bold text-green-600">
+        R$ {cartItems.reduce((total, item) => total + (item.price * item.quantity), 0).toFixed(2)}
+      </span>
+    </div>
+  }
+/>
+                    </div>
+                  
+                  </div>
+                </div>
+
+                {/* Favoritos */}
+                <div>
+                  <h3 className="text-2xl font-semibold text-gray-900 mb-6">Produtos Favoritos</h3>
+                  <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+                    <div className="overflow-x-auto">
+                     <DataTable
+  columns={[
+    { 
+      key: 'name', 
+      title: 'Produto', 
+      render: (value, row) => (
+        <div className="flex items-center">
+          <span className="text-2xl mr-3">{row.image}</span>
+          <span className="text-sm font-medium text-gray-900">{value}</span>
+        </div>
+      )
+    },
+    { key: 'price', title: 'Preço', render: (value) => `R$ ${value.toFixed(2)}` },
+    { key: 'store', title: 'Loja' }
+  ]}
+  data={favorites}
+  rowActions={(row) => (
+    <>
+      <button className="text-green-600 hover:text-green-900">Comprar</button>
+      <button className="text-red-600 hover:text-red-900">Remover</button>
+    </>
+  )}
+/>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+             {activeTab === 'settings' && (
+              <div className="space-y-8">
+                <h3 className="text-2xl font-semibold text-gray-900">Configurações da Conta</h3>
+
+                {/* Notificações */}
+                <div className="bg-gray-50 rounded-xl p-6">
+                  <h4 className="text-lg font-medium text-gray-900 mb-4">Notificações</h4>
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="font-medium text-gray-900">Notificações por Email</p>
+                        <p className="text-sm text-gray-500">Receba atualizações sobre pedidos e ofertas</p>
+                      </div>
+                      <label className="flex items-center cursor-pointer">
+                        <input
+                          type="checkbox"
+                          name="notifications.email"
+                          checked={formData.notifications.email}
+                          onChange={handleChange}
+                          className="sr-only"
+                        />
+                        <div className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                          formData.notifications.email ? 'bg-green-500' : 'bg-gray-300'
+                        }`}>
+                          <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                            formData.notifications.email ? 'translate-x-6' : 'translate-x-1'
+                          }`} />
+                        </div>
+                      </label>
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="font-medium text-gray-900">Notificações SMS</p>
+                        <p className="text-sm text-gray-500">Receba alertas importantes por SMS</p>
+                      </div>
+                      <label className="flex items-center cursor-pointer">
+                        <input
+                          type="checkbox"
+                          name="notifications.sms"
+                          checked={formData.notifications.sms}
+                          onChange={handleChange}
+                          className="sr-only"
+                        />
+                        <div className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                          formData.notifications.sms ? 'bg-green-500' : 'bg-gray-300'
+                        }`}>
+                          <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                            formData.notifications.sms ? 'translate-x-6' : 'translate-x-1'
+                          }`} />
+                        </div>
+                      </label>
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="font-medium text-gray-900">Notificações Push</p>
+                        <p className="text-sm text-gray-500">Notificações do navegador em tempo real</p>
+                      </div>
+                      <label className="flex items-center cursor-pointer">
+                        <input
+                          type="checkbox"
+                          name="notifications.push"
+                          checked={formData.notifications.push}
+                          onChange={handleChange}
+                          className="sr-only"
+                        />
+                        <div className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                          formData.notifications.push ? 'bg-green-500' : 'bg-gray-300'
+                        }`}>
+                          <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                            formData.notifications.push ? 'translate-x-6' : 'translate-x-1'
+                          }`} />
+                        </div>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Segurança */}
+                <div className="bg-gray-50 rounded-xl p-6">
+                  <h4 className="text-lg font-medium text-gray-900 mb-4">Segurança</h4>
+                  <div className="space-y-4">
+                    <button className="w-full text-left p-4 bg-white rounded-lg border border-gray-200 hover:border-green-300 transition-colors duration-200">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="font-medium text-gray-900">Alterar Senha</p>
+                          <p className="text-sm text-gray-500">Última alteração há 3 meses</p>
+                        </div>
+                        <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                      </div>
+                    </button>
+
+                    <button className="w-full text-left p-4 bg-white rounded-lg border border-gray-200 hover:border-green-300 transition-colors duration-200">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="font-medium text-gray-900">Autenticação de Dois Fatores</p>
+                          <p className="text-sm text-gray-500">Adicione uma camada extra de segurança</p>
+                        </div>
+                        <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                      </div>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Zona de Perigo */}
+                <div className="bg-red-50 rounded-xl p-6 border border-red-200">
+                  <h4 className="text-lg font-medium text-red-900 mb-4">Zona de Perigo</h4>
+                  <div className="space-y-4">
+                    <button className="w-full text-left p-4 bg-white rounded-lg border border-red-200 hover:border-red-400 transition-colors duration-200">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="font-medium text-red-900">Excluir Conta</p>
+                          <p className="text-sm text-red-600">Esta ação não pode ser desfeita</p>
+                        </div>
+                        <svg className="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                      </div>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'orders' && (
+  <div className="space-y-6">
+    <h3 className="text-2xl font-semibold text-gray-900 mb-6">Meus Pedidos</h3>
+    <DataTable
+      columns={[
+        { key: 'id', title: 'Pedido' },
+        { key: 'date', title: 'Data' },
+        { key: 'items', title: 'Itens', whitespace: 'whitespace-normal' },
+        { key: 'total', title: 'Total', render: (value) => `R$ ${value.toFixed(2)}` },
+        { 
+          key: 'status', 
+          title: 'Status', 
+          render: (value, row) => (
+            <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${row.statusColor}`}>
+              {value}
+            </span>
+          )
+        }
+      ]}
+      data={orders}
+    />
+  </div>
+)}
+
+{activeTab === 'cart' && (
+  <div className="space-y-6">
+    <h3 className="text-2xl font-semibold text-gray-900 mb-6">Meu Carrinho</h3>
+    <DataTable
+      columns={[
+        { 
+          key: 'name', 
+          title: 'Produto', 
+          render: (value, row) => (
+            <div className="flex items-center">
+              <span className="text-2xl mr-3">{row.image}</span>
+              <span className="text-sm font-medium text-gray-900">{value}</span>
+            </div>
+          )
+        },
+        { key: 'price', title: 'Preço', render: (value) => `R$ ${value.toFixed(2)}` },
+        { key: 'quantity', title: 'Quantidade' },
+        { 
+          key: 'subtotal', 
+          title: 'Subtotal', 
+          render: (_, row) => `R$ ${(row.price * row.quantity).toFixed(2)}` 
+        }
+      ]}
+      data={cartItems}
+      rowActions={(row) => (
+        <button className="text-red-600 hover:text-red-900">Remover</button>
+      )}
+      showFooter
+      footerContent={
+        <div className="flex justify-between items-center">
+          <span className="text-lg font-semibold text-gray-900">Total:</span>
+          <span className="text-lg font-bold text-green-600">
+            R$ {cartItems.reduce((total, item) => total + (item.price * item.quantity), 0).toFixed(2)}
+          </span>
+        </div>
+      }
+    />
+  </div>
+)}{activeTab === 'favorites' && (
+  <div className="space-y-6">
+    <h3 className="text-2xl font-semibold text-gray-900 mb-6">Meus Favoritos</h3>
+    <DataTable
+      columns={[
+        { 
+          key: 'name', 
+          title: 'Produto', 
+          render: (value, row) => (
+            <div className="flex items-center">
+              <span className="text-2xl mr-3">{row.image}</span>
+              <span className="text-sm font-medium text-gray-900">{value}</span>
+            </div>
+          )
+        },
+        { key: 'price', title: 'Preço', render: (value) => `R$ ${value.toFixed(2)}` },
+        { key: 'store', title: 'Loja' }
+      ]}
+      data={favorites}
+      rowActions={(row) => (
+        <>
+          <button className="text-green-600 hover:text-green-900">Comprar</button>
+          <button className="text-red-600 hover:text-red-900">Remover</button>
+        </>
+      )}
+    />
+  </div>
+)}
             {activeTab === 'settings' && (
               <div className="space-y-8">
                 <h3 className="text-2xl font-semibold text-gray-900">Configurações da Conta</h3>
