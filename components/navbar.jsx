@@ -56,7 +56,7 @@ export default function Navbar() {
   ];
 
   const navigationItems = [
-    'Home', 'Produtos', 'Contato', 'Carrinho', 'Login', 'Cadastro', 'Admin'
+    'Home', 'Produtos', 'Comprar', 'Login', 'Cadastro', 'Admin'
   ];
 
   return (
