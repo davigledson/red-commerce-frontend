@@ -49,7 +49,7 @@ export default function CartPage() {
   const subTotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   return (
-  <div className="max-w-screen-xl mx-auto mt-16 p-10 grid grid-cols-1 lg:grid-cols-[3fr_1fr] gap-10 scale-[1.05]">
+  <div className="max-w-screen-xl mx-auto mt-20 p-10 grid grid-cols-1 lg:grid-cols-[3fr_1fr] gap-10 scale-[1.05]">
     {/* Lista de itens */}
    <div className="space-y-8">
   <h1 className="text-5xl font-bold">Seu carrinho</h1>

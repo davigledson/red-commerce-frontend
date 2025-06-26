@@ -3,6 +3,7 @@ import { useState } from 'react';
 
 // Componente FilterSidebar
 export default function FilterSidebar({ onFilterChange, className = "" }) {
+  const [isVisible, setIsVisible] = useState(true);
   const [filters, setFilters] = useState({
     organizarPor: 'relevancia',
     tiposMuda: ['todos'],
@@ -129,64 +130,86 @@ export default function FilterSidebar({ onFilterChange, className = "" }) {
   ];
 
   return (
-    <div className={`bg-white rounded-2xl shadow-sm border border-gray-100 p-5 h-fit sticky top-6 ${className}`}>
-      <div className="flex items-center justify-between mb-5">
+    <div className={`bg-white rounded-2xl shadow-sm border border-gray-100 h-fit sticky top-6 ${className}`}>
+      {/* Header com botão de toggle */}
+      <div className="flex items-center justify-between p-5 border-b border-gray-100">
         <h2 className="text-lg font-bold text-gray-900">Filtros</h2>
-        <button
-          onClick={() => {
-            const resetFilters = {
-              organizarPor: 'relevancia',
-              tiposMuda: ['todos'],
-              ambiente: 'todos',
-              iluminacao: 'todos',
-              rega: 'todos'
-            };
-            setFilters(resetFilters);
-            if (onFilterChange) {
-              onFilterChange(resetFilters);
-            }
-          }}
-          className="text-sm text-green-600 hover:text-green-700 font-medium transition-colors duration-200"
-        >
-          Limpar
-        </button>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => {
+              const resetFilters = {
+                organizarPor: 'relevancia',
+                tiposMuda: ['todos'],
+                ambiente: 'todos',
+                iluminacao: 'todos',
+                rega: 'todos'
+              };
+              setFilters(resetFilters);
+              if (onFilterChange) {
+                onFilterChange(resetFilters);
+              }
+            }}
+            className="text-sm text-green-600 hover:text-green-700 font-medium transition-colors duration-200"
+          >
+            Limpar
+          </button>
+          <button
+            onClick={() => setIsVisible(!isVisible)}
+            className="p-1 text-gray-500 hover:text-gray-700 transition-colors duration-200"
+            title={isVisible ? "Ocultar filtros" : "Mostrar filtros"}
+          >
+            <svg 
+              className={`w-5 h-5 transform transition-transform duration-200 ${isVisible ? 'rotate-180' : ''}`} 
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+            </svg>
+          </button>
+        </div>
       </div>
 
-      <div className=" pr-2">
-        <FilterSection
-          title="Organizar por:"
-          options={organizarOptions}
-          category="organizarPor"
-          multiSelect={false}
-        />
+      {/* Conteúdo dos filtros com animação */}
+      <div className={`transition-all duration-300 ease-in-out overflow-hidden ${
+        isVisible ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'
+      }`}>
+        <div className="p-5 pr-2">
+          <FilterSection
+            title="Organizar por:"
+            options={organizarOptions}
+            category="organizarPor"
+            multiSelect={false}
+          />
 
-        <FilterSection
-          title="Tipos de muda:"
-          options={tiposMudaOptions}
-          category="tiposMuda"
-          multiSelect={true}
-        />
+          <FilterSection
+            title="Tipos de muda:"
+            options={tiposMudaOptions}
+            category="tiposMuda"
+            multiSelect={true}
+          />
 
-        <FilterSection
-          title="Ambiente:"
-          options={ambienteOptions}
-          category="ambiente"
-          multiSelect={false}
-        />
+          <FilterSection
+            title="Ambiente:"
+            options={ambienteOptions}
+            category="ambiente"
+            multiSelect={false}
+          />
 
-        <FilterSection
-          title="Iluminação:"
-          options={iluminacaoOptions}
-          category="iluminacao"
-          multiSelect={false}
-        />
+          <FilterSection
+            title="Iluminação:"
+            options={iluminacaoOptions}
+            category="iluminacao"
+            multiSelect={false}
+          />
 
-        <FilterSection
-          title="Rega:"
-          options={regaOptions}
-          category="rega"
-          multiSelect={false}
-        />
+          <FilterSection
+            title="Rega:"
+            options={regaOptions}
+            category="rega"
+            multiSelect={false}
+          />
+        </div>
       </div>
     </div>
   );
