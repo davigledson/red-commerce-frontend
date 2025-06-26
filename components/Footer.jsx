@@ -14,7 +14,7 @@ export default function Footer() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-bold">NOSSA EMPRESA</h3>
+              <h3 className="text-xl font-bold">TITAN DEV</h3>
             </div>
             
             <h4 className="font-semibold mb-3 text-green-100">NOSSA MISSÃO</h4>
@@ -94,11 +94,11 @@ export default function Footer() {
         {/* Linha divisória */}
         <div className="border-t border-green-300 mt-8 pt-6">
           <div className="flex flex-col md:flex-row justify-between items-center text-sm text-green-50">
-            <p>© NOSSA EMPRESA - Comércio de Produtos e Serviços Digitais Ltda.</p>
+            <p>© TITAN DEV - Comércio de Produtos e Serviços Digitais Ltda.</p>
             <p className="mt-2 md:mt-0">
               Feito com ❤️ pela{' '}
               <a href="#" className="text-white hover:underline font-medium">
-                Equipe de Desenvolvimento
+                Equipe 404 not Found Team
               </a>
             </p>
           </div>

@@ -5,7 +5,7 @@ import Image from 'next/image';
 
 export default function BannerCard({ titulo, descricao, imagem }) {
   return (
-    <div className="relative w-full h-64 sm:h-80 md:h-96 overflow-hidden rounded-lg shadow-lg">
+    <div className="relative w-full  h-64 sm:h-80 md:h-96 overflow-hidden rounded-lg shadow-lg">
       {/* Imagem de fundo */}
       <Image
         src={`/imgs/${imagem}`}
