@@ -37,7 +37,7 @@ export class AuthService extends BaseService {
 
   static async registro(dados: RegistroDados): Promise<{ usuario: Usuario; token: string }> {
     try {
-      const response = await this.axiosInstance.post('/sign_up', { usuario: dados });
+      const response = await this.axiosInstance.post('', { usuario: dados });
       // O mesmo se aplica aqui para o registro: se o backend retorna o token no corpo,
       // response.data já contém o que você precisa.
       return response.data;

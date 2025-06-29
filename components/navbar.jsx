@@ -3,24 +3,22 @@
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useAuth } from '@/hooks/ContextoAuth'; // Importe o hook useAuth
+import { useAuth } from '@/hooks/ContextoAuth';
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isClient, setIsClient] = useState(false); // Para garantir que o código roda no cliente
+  const [isClient, setIsClient] = useState(false);
   const dropdownRef = useRef(null);
   const mobileMenuRef = useRef(null);
 
-  const { loggedInUser, logout } = useAuth(); // Use o hook useAuth para obter o usuário e a função de logout
+  const { loggedInUser, logout } = useAuth();
 
-  // Garantir que estamos no cliente antes de fazer qualquer coisa
   useEffect(() => {
     setIsClient(true);
   }, []);
 
-  // Handle scroll - só depois do componente montar no cliente
   useEffect(() => {
     if (!isClient) return;
     
@@ -29,14 +27,11 @@ export default function Navbar() {
       setScrolled(scrollPosition > 0);
     };
     
-    // Verificar posição inicial
     handler();
-    
     window.addEventListener('scroll', handler, { passive: true });
     return () => window.removeEventListener('scroll', handler);
   }, [isClient]);
 
-  // Handle click outside dropdown and mobile menu
   useEffect(() => {
     if (!isClient) return;
     
@@ -53,7 +48,6 @@ export default function Navbar() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [isClient]);
 
-  // Prevent body scroll when mobile menu is open
   useEffect(() => {
     if (!isClient) return;
     
@@ -68,22 +62,17 @@ export default function Navbar() {
     };
   }, [isMobileMenuOpen, isClient]);
 
-  // A função handleLogout agora chama a função logout do contexto
   const handleLogout = () => {
-    logout(); // Chama a função de logout do contexto
-    // Opcional: redirecionar para a página de login ou home
-    // import { useRouter } from 'next/navigation';
-    // const router = useRouter();
-    // router.push('/login');
+    logout();
   };
 
   const profileMenuItems = [
-    { name: 'Meu Perfil', href: '/perfil', icon: '👤' },
-    { name: 'Meus Pedidos', href: '/pedidos', icon: '📦' },
-    { name: 'Favoritos', href: '/favoritos', icon: '💖' },
-    { name: 'Configurações', href: '/configuracoes', icon: '⚙️' },
-    { name: 'Ajuda', href: '/ajuda', icon: '❓' },
-    { name: 'Sair', action: handleLogout, icon: '🚪' }, 
+    { name: 'Meu Perfil', href: '/perfil', icon: '👤', description: 'Gerencie suas informações' },
+    { name: 'Meus Pedidos', href: '/pedidos', icon: '📦', description: 'Acompanhe seus pedidos' },
+    { name: 'Favoritos', href: '/favoritos', icon: '💖', description: 'Seus produtos favoritos' },
+    { name: 'Configurações', href: '/configuracoes', icon: '⚙️', description: 'Configurações da conta' },
+    { name: 'Ajuda', href: '/ajuda', icon: '❓', description: 'Centro de ajuda' },
+    { name: 'Sair', action: handleLogout, icon: '🚪', description: 'Sair da conta' }, 
   ];
 
   const navigationItems = [
@@ -99,26 +88,49 @@ export default function Navbar() {
     navigationItems.push({ name: 'Admin', href: '/admin' });
   }
 
+  // Função para gerar iniciais do nome
+  const getUserInitials = (name, email) => {
+    if (name) {
+      return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+    }
+    return email.split('@')[0].slice(0, 2).toUpperCase();
+  };
+
+  // Função para gerar cor baseada no nome
+  const getUserColor = (name, email) => {
+    const text = name || email;
+    const colors = [
+      'bg-gradient-to-br from-purple-500 to-pink-500',
+      'bg-gradient-to-br from-blue-500 to-cyan-500',
+      'bg-gradient-to-br from-green-500 to-emerald-500',
+      'bg-gradient-to-br from-orange-500 to-red-500',
+      'bg-gradient-to-br from-indigo-500 to-purple-500',
+      'bg-gradient-to-br from-teal-500 to-green-500',
+    ];
+    const index = text.length % colors.length;
+    return colors[index];
+  };
+
   return (
     <nav
-      className={`fixed top-0 left-0 w-full mb-10 z-50 transition-colors duration-300 ${
+      className={`fixed top-0 left-0 w-full mb-10 z-50 transition-all duration-500 ${
         isClient && scrolled 
-          ? 'bg-transparent backdrop-blur-xl' 
-          : 'bg-white bg-opacity-90 backdrop-blur shadow'
+          ? 'bg-white/80 backdrop-blur-xl shadow-lg border-b border-white/20' 
+          : 'bg-white/95 backdrop-blur-md shadow-md'
       }`}
       suppressHydrationWarning
     >
-      <div className="max-w-screen-xl mx-auto px-4 py-4">
+      <div className="max-w-screen-xl mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <Link href="/">
+            <Link href="/" className="block transition-transform hover:scale-105 duration-200">
               <Image
                 src="/imgs/logo.png"
                 alt="Minha Loja"
                 width={64}
                 height={32}
-                className="object-contain"
+                className="object-contain drop-shadow-sm"
                 priority
               />
             </Link>
@@ -130,24 +142,33 @@ export default function Navbar() {
               <Link
                 key={item.name}
                 href={item.href}
-                className="text-lg font-medium text-green-800 hover:text-green-600 transition-colors duration-200"
+                className="relative text-lg font-medium text-gray-700 hover:text-green-600 transition-all duration-300 group"
               >
                 {item.name}
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-green-500 to-emerald-500 transition-all duration-300 group-hover:w-full"></span>
               </Link>
             ))}
             
-            {/* Desktop Dropdown do Perfil - Só mostra se houver usuário logado */}
+            {/* Desktop User Profile */}
             {loggedInUser && (
               <div className="relative" ref={dropdownRef}>
                 <button
                   onClick={() => setIsProfileOpen(!isProfileOpen)}
-                  className="text-lg font-medium text-green-800 hover:text-green-600 transition-colors duration-200 flex items-center space-x-1"
+                  className="flex items-center space-x-2 text-left hover:bg-green-50 px-3 py-2 rounded-lg transition-all duration-200"
                   aria-expanded={isProfileOpen}
                   aria-haspopup="true"
                 >
-                  <span>{loggedInUser.nome || loggedInUser.email.split('@')[0]}</span> 
+                  <div>
+                    <p className="text-sm font-semibold text-gray-800">
+                      {loggedInUser.nome || loggedInUser.email.split('@')[0]}
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      {loggedInUser.email}
+                    </p>
+                  </div>
+                  
                   <svg 
-                    className={`w-4 h-4 transition-transform duration-200 ${isProfileOpen ? 'rotate-180' : ''}`}
+                    className={`w-4 h-4 transition-transform duration-300 text-gray-600 ${isProfileOpen ? 'rotate-180' : ''}`}
                     fill="none" 
                     stroke="currentColor" 
                     viewBox="0 0 24 24"
@@ -157,51 +178,68 @@ export default function Navbar() {
                   </svg>
                 </button>
 
+                {/* Dropdown Menu */}
                 {isProfileOpen && (
-                  <div className="absolute top-full right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
-                    <div className="px-4 py-2 border-b border-gray-100">
-                      <p className="text-sm font-medium text-gray-900">{loggedInUser.nome || 'Usuário'}</p>
+                  <div className="absolute top-full right-0 mt-3 w-64 bg-white/95 backdrop-blur-xl rounded-xl shadow-xl border border-white/20 py-3 z-50 animate-in slide-in-from-top-2 duration-200">
+                    {/* User Header */}
+                    <div className="px-4 py-3 border-b border-gray-100/50">
+                      <p className="text-base font-semibold text-gray-900">{loggedInUser.nome || 'Usuário'}</p>
                       <p className="text-sm text-gray-500">{loggedInUser.email}</p>
                     </div>
                     
-                    {profileMenuItems.map((item) => (
-                      'href' in item ? (
-                        <Link
-                          key={item.name}
-                          href={item.href}
-                          className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-800 transition-colors duration-150"
-                          onClick={() => setIsProfileOpen(false)}
-                        >
-                          <span className="mr-3 text-base" aria-hidden="true">{item.icon}</span>
-                          {item.name}
-                        </Link>
-                      ) : (
-                        <button
-                          key={item.name}
-                          onClick={() => { item.action(); setIsProfileOpen(false); }}
-                          className="flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-800 transition-colors duration-150"
-                        >
-                          <span className="mr-3 text-base" aria-hidden="true">{item.icon}</span>
-                          {item.name}
-                        </button>
-                      )
-                    ))}
+                    {/* Menu Items */}
+                    <div className="py-2">
+                      {profileMenuItems.map((item, index) => (
+                        'href' in item ? (
+                          <Link
+                            key={item.name}
+                            href={item.href}
+                            className="flex items-center px-4 py-3 text-gray-700 hover:bg-gradient-to-r hover:from-green-50 hover:to-emerald-50 hover:text-green-800 transition-all duration-200 group"
+                            onClick={() => setIsProfileOpen(false)}
+                          >
+                            <span className="mr-4 text-lg group-hover:scale-110 transition-transform duration-200" aria-hidden="true">{item.icon}</span>
+                            <div className="flex-1">
+                              <p className="font-medium">{item.name}</p>
+                              <p className="text-xs text-gray-500 group-hover:text-green-600">{item.description}</p>
+                            </div>
+                          </Link>
+                        ) : (
+                          <button
+                            key={item.name}
+                            onClick={() => { item.action(); setIsProfileOpen(false); }}
+                            className={`flex items-center w-full text-left px-4 py-3 transition-all duration-200 group ${
+                              item.name === 'Sair' 
+                                ? 'text-red-600 hover:bg-red-50 hover:text-red-700' 
+                                : 'text-gray-700 hover:bg-gradient-to-r hover:from-green-50 hover:to-emerald-50 hover:text-green-800'
+                            }`}
+                          >
+                            <span className="mr-4 text-lg group-hover:scale-110 transition-transform duration-200" aria-hidden="true">{item.icon}</span>
+                            <div className="flex-1">
+                              <p className="font-medium">{item.name}</p>
+                              <p className={`text-xs ${item.name === 'Sair' ? 'text-red-400 group-hover:text-red-500' : 'text-gray-500 group-hover:text-green-600'}`}>
+                                {item.description}
+                              </p>
+                            </div>
+                          </button>
+                        )
+                      ))}
+                    </div>
                   </div>
                 )}
               </div>
             )}
           </div>
 
-          {/* Mobile Hamburger Button */}
-          <div className="lg:hidden" ref={mobileMenuRef}>
+          {/* Mobile Menu */}
+          <div className="lg:hidden">
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="p-2 rounded-md text-green-800 hover:text-green-600 hover:bg-green-50 transition-colors duration-200"
+              className="p-3 rounded-xl text-gray-700 hover:text-green-600 hover:bg-green-50/50 transition-all duration-200"
               aria-expanded={isMobileMenuOpen}
               aria-label="Menu principal"
             >
               <svg
-                className={`w-6 h-6 transition-transform duration-300 ${isMobileMenuOpen ? 'rotate-90' : ''}`}
+                className={`w-6 h-6 transition-transform duration-300 ${isMobileMenuOpen ? 'rotate-45' : ''}`}
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -216,59 +254,80 @@ export default function Navbar() {
             </button>
 
             {/* Mobile Menu */}
-            <div 
-              className={`absolute top-full left-0 w-full bg-white shadow-lg border-t border-gray-200 transition-all duration-300 ${
-                isMobileMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
-              }`}
-              aria-hidden={!isMobileMenuOpen}
-            >
-              <div className="px-4 py-6 space-y-4">
-                {/* Mobile Navigation Links */}
-                {navigationItems.map((item) => (
-                  <Link
-                    key={item.name}
-                    href={item.href}
-                    className="block py-2 text-lg font-medium text-green-800 hover:text-green-600 transition-colors duration-200 border-b border-gray-100 last:border-b-0"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    {item.name}
-                  </Link>
-                ))}
-
-                {/* Mobile Profile Section - Só mostra se houver usuário logado */}
-                {loggedInUser && (
-                  <div className="pt-4 border-t border-gray-200">
-                    <div className="px-2 py-2 mb-3">
-                      <p className="text-sm font-medium text-gray-900">{loggedInUser.nome || 'Usuário'}</p>
-                      <p className="text-sm text-gray-500">{loggedInUser.email}</p>
+            {isMobileMenuOpen && (
+              <div className="absolute top-full left-0 w-full bg-white/95 backdrop-blur-xl shadow-xl border-t border-gray-200 animate-in slide-in-from-top-2 duration-200">
+                <div className="px-4 py-6 space-y-4 max-w-screen-xl mx-auto">
+                  {/* Mobile User Info */}
+                  {loggedInUser && (
+                    <div className="mb-6 p-4 bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl border border-green-100">
+                      <p className="font-semibold text-gray-900">{loggedInUser.nome || 'Usuário'}</p>
+                      <p className="text-sm text-gray-600">{loggedInUser.email}</p>
+                      <span className="inline-block px-2 py-1 text-xs bg-green-200 text-green-800 rounded-full mt-2">
+                        {loggedInUser.papel === 'admin' ? 'Administrador' : 'Usuário'}
+                      </span>
                     </div>
-                    
-                    {profileMenuItems.map((item) => (
-                      'href' in item ? (
-                        <Link
-                          key={item.name}
-                          href={item.href}
-                          className="flex items-center py-2 px-2 text-base text-gray-700 hover:bg-green-50 hover:text-green-800 transition-colors duration-150 rounded-md"
-                          onClick={() => setIsMobileMenuOpen(false)}
-                        >
-                          <span className="mr-3 text-lg" aria-hidden="true">{item.icon}</span>
-                          {item.name}
-                        </Link>
-                      ) : (
-                        <button
-                          key={item.name}
-                          onClick={() => { item.action(); setIsMobileMenuOpen(false); }}
-                          className="flex items-center w-full text-left py-2 px-2 text-base text-gray-700 hover:bg-green-50 hover:text-green-800 transition-colors duration-150 rounded-md"
-                        >
-                          <span className="mr-3 text-lg" aria-hidden="true">{item.icon}</span>
-                          {item.name}
-                        </button>
-                      )
+                  )}
+
+                  {/* Mobile Navigation Links */}
+                  <div className="space-y-2">
+                    <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">Navegação</h3>
+                    {navigationItems.map((item) => (
+                      <Link
+                        key={item.name}
+                        href={item.href}
+                        className="block py-3 px-3 text-lg font-medium text-gray-700 hover:text-green-600 hover:bg-green-50 rounded-lg transition-all duration-200"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        {item.name}
+                      </Link>
                     ))}
                   </div>
-                )}
+
+                  {/* Mobile Profile Menu */}
+                  {loggedInUser && (
+                    <div className="border-t border-gray-200 pt-4 mt-6">
+                      <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">Conta</h3>
+                      <div className="space-y-2">
+                        {profileMenuItems.map((item) => (
+                          'href' in item ? (
+                            <Link
+                              key={item.name}
+                              href={item.href}
+                              className="flex items-center py-3 px-3 text-gray-700 hover:bg-green-50 hover:text-green-600 rounded-lg transition-all duration-200"
+                              onClick={() => setIsMobileMenuOpen(false)}
+                            >
+                              <span className="mr-3 text-lg">{item.icon}</span>
+                              <div>
+                                <p className="font-medium">{item.name}</p>
+                                <p className="text-xs text-gray-500">{item.description}</p>
+                              </div>
+                            </Link>
+                          ) : (
+                            <button
+                              key={item.name}
+                              onClick={() => { item.action(); setIsMobileMenuOpen(false); }}
+                              className={`flex items-center w-full py-3 px-3 rounded-lg transition-all duration-200 ${
+                                item.name === 'Sair' 
+                                  ? 'text-red-600 hover:bg-red-50' 
+                                  : 'text-gray-700 hover:bg-green-50 hover:text-green-600'
+                              }`}
+                            >
+                              <span className="mr-3 text-lg">{item.icon}</span>
+                              <div className="text-left">
+                                <p className="font-medium">{item.name}</p>
+                                <p className={`text-xs ${item.name === 'Sair' ? 'text-red-400' : 'text-gray-500'}`}>
+                                  {item.description}
+                                </p>
+                              </div>
+                            </button>
+                          )
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </div>

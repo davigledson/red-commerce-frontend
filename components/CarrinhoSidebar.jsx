@@ -1,12 +1,18 @@
+// components/CarrinhoSidebar.jsx
 'use client';
+import { useState, useEffect } from "react"; // Mantenha useEffect se tiver alguma lógica de UI que dependa de props, mas remova useAuth, useCallback etc.
 
 export default function CarrinhoSidebar({ aberto, itens = [], onClose, onRemoverItem }) {
+  // A lógica de cálculo do total permanece aqui, pois depende apenas dos 'itens' recebidos
   const calcularTotal = () => {
     return itens.reduce((total, item) => {
-      const preco = typeof item.preco === 'string' 
-        ? parseFloat(item.preco.replace(',', '.')) 
-        : item.preco || 0;
-      return total + preco;
+      // Assume que 'item.produto.preco' é o preço do produto e 'item.quantidade' é a quantidade
+      // Adapte conforme a estrutura real do seu item vindo do backend
+      const precoUnitario = typeof item.produto?.preco === 'string' 
+        ? parseFloat(item.produto.preco.replace(',', '.')) 
+        : item.produto?.preco || 0;
+      const quantidade = item.quantidade || 1; 
+      return total + (precoUnitario * quantidade);
     }, 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
   };
 
@@ -29,7 +35,8 @@ export default function CarrinhoSidebar({ aberto, itens = [], onClose, onRemover
         </button>
       </div>
       
-      <div className="p-4 overflow-y-auto h-[calc(100%-150px)]">
+      <div className="p-4 overflow-y-auto h-[calc(100%-150px )]">
+        {/* Removido loadingCart, error, loadingItems - agora gerenciados pelo pai */}
         {itens.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 text-gray-300 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -43,29 +50,34 @@ export default function CarrinhoSidebar({ aberto, itens = [], onClose, onRemover
               Continuar comprando
             </button>
           </div>
-        ) : (
+         ) : (
           <ul className="space-y-4">
-            {itens.map((item, index) => (
-              <li key={`${item.id}-${index}`} className="flex items-start gap-3 pb-4 border-b border-gray-100">
+            {itens.map((item) => (
+              // Use item.id como key se for único, ou uma combinação se necessário
+              <li key={item.id} className="flex items-start gap-3 pb-4 border-b border-gray-100">
                 <div className="flex-shrink-0">
                   <div className="h-16 w-16 bg-gray-100 rounded-md flex items-center justify-center overflow-hidden">
+                    {/* Acessa item.produto?.imagem e item.produto?.nome */}
                     <img 
-                      src={`/imgs/${item.imagem || "planta.png"}`} 
-                      alt={item.nome || "Produto"}
+                      src={`/imgs/${item.produto?.imagem || "planta.png"}`} 
+                      alt={item.produto?.nome || "Produto"}
                       className="h-full w-full object-cover"
                     />
                   </div>
                 </div>
                 <div className="flex-grow">
-                  <h3 className="font-medium text-gray-800">{item.nome || "Produto sem nome"}</h3>
-                  <span className="text-green-700 font-semibold">
-                    R$ {item.preco || "0,00"}
+                  <h3 className="font-medium text-gray-800">{item.produto?.nome || "Produto sem nome"}</h3>
+                  <span className="text-gray-600 text-sm">
+                    {item.quantidade} x R$ {parseFloat(item.produto?.preco || 0).toFixed(2).replace('.', ',')}
                   </span>
+                  <p className="text-green-700 font-semibold">
+                    R$ {(parseFloat(item.produto?.preco || 0) * (item.quantidade || 1)).toFixed(2).replace('.', ',')}
+                  </p>
                 </div>
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
-                    onRemoverItem(index);
+                    onRemoverItem(item.id); // Chama a função do pai, passando o ID do item do carrinho
                   }}
                   className="text-gray-400 hover:text-red-500 transition-colors"
                   aria-label="Remover item"
@@ -75,7 +87,7 @@ export default function CarrinhoSidebar({ aberto, itens = [], onClose, onRemover
                   </svg>
                 </button>
               </li>
-            ))}
+             ))}
           </ul>
         )}
       </div>
