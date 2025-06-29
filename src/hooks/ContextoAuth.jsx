@@ -1,7 +1,7 @@
 // context/AuthContext.jsx
 "use client"; // Necessário para usar hooks e estados no lado do cliente
 
-import React, { createContext, useState, useEffect, useContext } from 'react';
+import React, { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
 
 // Crie o contexto
 export const AuthContext = createContext(null);
@@ -30,34 +30,30 @@ export function AuthProvider({ children }) {
     loadUserFromLocalStorage();
   }, []);
 
-  // Função para fazer login
-  const login = (userData, token) => {
+  // Função para fazer login - AGORA COM useCallback
+  const login = useCallback((userData, token) => {
     localStorage.setItem('currentUser', JSON.stringify(userData));
     localStorage.setItem('authToken', token);
     setLoggedInUser(userData);
-  };
+  }, []); // Dependências vazias, pois não depende de nenhum estado ou prop que mude
 
-  // Função para fazer logout
-  const logout = () => {
+  // Função para fazer logout - AGORA COM useCallback
+  const logout = useCallback(() => {
     localStorage.removeItem('currentUser');
     localStorage.removeItem('authToken');
     setLoggedInUser(null);
-    // Opcional: redirecionar para a página de login
-    // import { useRouter } from 'next/navigation';
-    // const router = useRouter();
-    // router.push('/login');
-  };
+  }, []); // Dependências vazias
 
-  // O valor que será fornecido para os componentes filhos
-  const contextValue = {
+  // O useMemo para o valor do contexto já estava correto, mas agora suas dependências (login, logout) são estáveis
+  const authContextValue = useMemo(() => ({
     loggedInUser,
     loading,
     login,
     logout,
-  };
+  }), [loggedInUser, loading, login, logout]); 
 
   return (
-    <AuthContext.Provider value={contextValue}>
+    <AuthContext.Provider value={authContextValue}>
       {children}
     </AuthContext.Provider>
   );

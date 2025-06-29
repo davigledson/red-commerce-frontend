@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 
 export default function Footer() {
   return (
@@ -73,9 +74,12 @@ export default function Footer() {
 
           {/* Imagem Responsiva */}
           <div className="flex justify-center md:justify-end">
-            <img 
+            <Image 
+            width={200}
+            height={200}
               className="w-48 h-auto sm:w-56 md:w-64 lg:w-72 xl:w-80 2xl:w-96 object-contain transition-all duration-300 hover:scale-105" 
-              src="imgs/foo1.png" 
+              
+               src={`/imgs/foo1.png`}
               alt="Imagem decorativa footer" 
             />
           </div>
