@@ -1,6 +1,4 @@
-import axios from 'axios';
-
-const API_URL = 'http://localhost:3000/api/v1/produtos';
+import BaseService from './BaseService';
 
 interface Produto {
   id?: string;
@@ -15,14 +13,8 @@ interface Produto {
   updated_at?: string;
 }
 
-export default class ProdutoService {
-  private static axiosInstance = axios.create({
-    baseURL: API_URL,
-    timeout: 10000,
-    headers: {
-      'Content-Type': 'application/json',
-    }
-  });
+export default class ProdutoService extends BaseService {
+  private static axiosInstance = this.createAxiosInstance('produtos');
 
   static async listarTodos(): Promise<Produto[]> {
     try {
@@ -80,18 +72,6 @@ export default class ProdutoService {
     } catch (error) {
       this.handleError(error, `Erro ao deletar produto ID ${id}`);
       throw error;
-    }
-  }
-
-  private static handleError(error: unknown, message: string): void {
-    if (axios.isAxiosError(error)) {
-      console.error(`${message}:`, {
-        status: error.response?.status,
-        data: error.response?.data,
-        message: error.message
-      });
-    } else {
-      console.error(`${message}:`, error);
     }
   }
 }
