@@ -1,23 +1,73 @@
+// components/Login.jsx
 "use client";
 import { useState } from 'react';
+import { AuthService } from '@/services/AuthService';
+import axios from 'axios';
+import { useRouter } from 'next/navigation'; // Ou 'next/router'
+import { useAuth } from '@/hooks/ContextoAuth'; // Importe o hook useAuth
 
 export default function Login() {
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const router = useRouter();
+  const { login: authLogin } = useAuth(); // Renomeie para evitar conflito com a função login do AuthService
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Aqui você pode adicionar a lógica de login
-    console.log('Login submitted:', formData);
+    setLoading(true);
+    setError('');
+
+    try {
+      const response = await AuthService.login(formData.email, formData.password);
+
+      console.log('Login bem-sucedido:', response);
+
+      // Chame a função login do contexto para atualizar o estado global
+      authLogin(response.usuario, response.token);
+
+      // Lógica de redirecionamento baseada no papel do usuário
+      if (response.usuario && response.usuario.papel) {
+        if (response.usuario.papel === 'admin') {
+          router.push('/admin');
+        } else if (response.usuario.papel === 'cliente') {
+          router.push('/produtos');
+        } else {
+          router.push('/dashboard');
+        }
+      } else {
+        router.push('/dashboard');
+      }
+
+    } catch (err) {
+      console.error('Erro ao fazer login:', err);
+      if (axios.isAxiosError(err) && err.response) {
+        const backendError = err.response.data;
+        if (backendError && backendError.error) {
+          setError(backendError.error);
+        } else if (backendError && backendError.errors && backendError.errors.length > 0) {
+          setError(backendError.errors.join(', '));
+        } else {
+          setError('Ocorreu um erro inesperado no servidor. Por favor, tente novamente.');
+        }
+      } else {
+        setError('Não foi possível conectar ao servidor. Verifique sua conexão ou tente novamente mais tarde.');
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
+  // ... (restante do JSX do formulário de login)
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden">
@@ -34,6 +84,12 @@ export default function Login() {
 
         {/* Formulário */}
         <div className="p-6 space-y-5">
+          {error && (
+            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+              <strong className="font-bold">Erro!</strong>
+              <span className="block sm:inline"> {error}</span>
+            </div>
+          )}
           <div>
             <label htmlFor="email" className="block mb-2 text-sm font-semibold text-gray-700">
               Email
@@ -96,8 +152,9 @@ export default function Login() {
             type="submit"
             onClick={handleSubmit}
             className="w-full bg-gradient-to-r from-green-500 to-blue-500 text-white py-3 rounded-lg font-semibold hover:from-green-600 hover:to-blue-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transform hover:scale-[1.02] transition-all duration-200 shadow-lg"
+            disabled={loading}
           >
-            Entrar
+            {loading ? 'Entrando...' : 'Entrar'}
           </button>
         </div>
 

@@ -1,15 +1,19 @@
+// components/Navbar.jsx
 "use client";
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useAuth } from '@/hooks/ContextoAuth'; // Importe o hook useAuth
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isClient, setIsClient] = useState(false);
+  const [isClient, setIsClient] = useState(false); // Para garantir que o código roda no cliente
   const dropdownRef = useRef(null);
   const mobileMenuRef = useRef(null);
+
+  const { loggedInUser, logout } = useAuth(); // Use o hook useAuth para obter o usuário e a função de logout
 
   // Garantir que estamos no cliente antes de fazer qualquer coisa
   useEffect(() => {
@@ -64,23 +68,36 @@ export default function Navbar() {
     };
   }, [isMobileMenuOpen, isClient]);
 
+  // A função handleLogout agora chama a função logout do contexto
+  const handleLogout = () => {
+    logout(); // Chama a função de logout do contexto
+    // Opcional: redirecionar para a página de login ou home
+    // import { useRouter } from 'next/navigation';
+    // const router = useRouter();
+    // router.push('/login');
+  };
+
   const profileMenuItems = [
     { name: 'Meu Perfil', href: '/perfil', icon: '👤' },
     { name: 'Meus Pedidos', href: '/pedidos', icon: '📦' },
     { name: 'Favoritos', href: '/favoritos', icon: '💖' },
     { name: 'Configurações', href: '/configuracoes', icon: '⚙️' },
     { name: 'Ajuda', href: '/ajuda', icon: '❓' },
-    { name: 'Sair', href: '/logout', icon: '🚪' },
+    { name: 'Sair', action: handleLogout, icon: '🚪' }, 
   ];
 
   const navigationItems = [
     { name: 'Home', href: '/' },
     { name: 'Produtos', href: '/produtos' },
     { name: 'Comprar', href: '/comprar' },
-    { name: 'Login', href: '/login' },
-    { name: 'Cadastro', href: '/cadastro' },
-    { name: 'Admin', href: '/admin' },
   ];
+
+  if (!loggedInUser) {
+    navigationItems.push({ name: 'Login', href: '/login' });
+    navigationItems.push({ name: 'Cadastro', href: '/cadastro' });
+  } else if (loggedInUser.papel === 'admin') {
+    navigationItems.push({ name: 'Admin', href: '/admin' });
+  }
 
   return (
     <nav
@@ -119,48 +136,60 @@ export default function Navbar() {
               </Link>
             ))}
             
-            {/* Desktop Dropdown do Perfil */}
-            <div className="relative" ref={dropdownRef}>
-              <button
-                onClick={() => setIsProfileOpen(!isProfileOpen)}
-                className="text-lg font-medium text-green-800 hover:text-green-600 transition-colors duration-200 flex items-center space-x-1"
-                aria-expanded={isProfileOpen}
-                aria-haspopup="true"
-              >
-                <span>Perfil</span>
-                <svg 
-                  className={`w-4 h-4 transition-transform duration-200 ${isProfileOpen ? 'rotate-180' : ''}`}
-                  fill="none" 
-                  stroke="currentColor" 
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
+            {/* Desktop Dropdown do Perfil - Só mostra se houver usuário logado */}
+            {loggedInUser && (
+              <div className="relative" ref={dropdownRef}>
+                <button
+                  onClick={() => setIsProfileOpen(!isProfileOpen)}
+                  className="text-lg font-medium text-green-800 hover:text-green-600 transition-colors duration-200 flex items-center space-x-1"
+                  aria-expanded={isProfileOpen}
+                  aria-haspopup="true"
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
+                  <span>{loggedInUser.nome || loggedInUser.email.split('@')[0]}</span> 
+                  <svg 
+                    className={`w-4 h-4 transition-transform duration-200 ${isProfileOpen ? 'rotate-180' : ''}`}
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
 
-              {/* Desktop Dropdown Menu */}
-              {isProfileOpen && (
-                <div className="absolute top-full right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
-                  <div className="px-4 py-2 border-b border-gray-100">
-                    <p className="text-sm font-medium text-gray-900">João Silva</p>
-                    <p className="text-sm text-gray-500">joao@email.com</p>
+                {isProfileOpen && (
+                  <div className="absolute top-full right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
+                    <div className="px-4 py-2 border-b border-gray-100">
+                      <p className="text-sm font-medium text-gray-900">{loggedInUser.nome || 'Usuário'}</p>
+                      <p className="text-sm text-gray-500">{loggedInUser.email}</p>
+                    </div>
+                    
+                    {profileMenuItems.map((item) => (
+                      'href' in item ? (
+                        <Link
+                          key={item.name}
+                          href={item.href}
+                          className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-800 transition-colors duration-150"
+                          onClick={() => setIsProfileOpen(false)}
+                        >
+                          <span className="mr-3 text-base" aria-hidden="true">{item.icon}</span>
+                          {item.name}
+                        </Link>
+                      ) : (
+                        <button
+                          key={item.name}
+                          onClick={() => { item.action(); setIsProfileOpen(false); }}
+                          className="flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-800 transition-colors duration-150"
+                        >
+                          <span className="mr-3 text-base" aria-hidden="true">{item.icon}</span>
+                          {item.name}
+                        </button>
+                      )
+                    ))}
                   </div>
-                  
-                  {profileMenuItems.map((item) => (
-                    <Link
-                      key={item.name}
-                      href={item.href}
-                      className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-800 transition-colors duration-150"
-                      onClick={() => setIsProfileOpen(false)}
-                    >
-                      <span className="mr-3 text-base" aria-hidden="true">{item.icon}</span>
-                      {item.name}
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </div>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Mobile Hamburger Button */}
@@ -206,25 +235,38 @@ export default function Navbar() {
                   </Link>
                 ))}
 
-                {/* Mobile Profile Section */}
-                <div className="pt-4 border-t border-gray-200">
-                  <div className="px-2 py-2 mb-3">
-                    <p className="text-sm font-medium text-gray-900">João Silva</p>
-                    <p className="text-sm text-gray-500">joao@email.com</p>
+                {/* Mobile Profile Section - Só mostra se houver usuário logado */}
+                {loggedInUser && (
+                  <div className="pt-4 border-t border-gray-200">
+                    <div className="px-2 py-2 mb-3">
+                      <p className="text-sm font-medium text-gray-900">{loggedInUser.nome || 'Usuário'}</p>
+                      <p className="text-sm text-gray-500">{loggedInUser.email}</p>
+                    </div>
+                    
+                    {profileMenuItems.map((item) => (
+                      'href' in item ? (
+                        <Link
+                          key={item.name}
+                          href={item.href}
+                          className="flex items-center py-2 px-2 text-base text-gray-700 hover:bg-green-50 hover:text-green-800 transition-colors duration-150 rounded-md"
+                          onClick={() => setIsMobileMenuOpen(false)}
+                        >
+                          <span className="mr-3 text-lg" aria-hidden="true">{item.icon}</span>
+                          {item.name}
+                        </Link>
+                      ) : (
+                        <button
+                          key={item.name}
+                          onClick={() => { item.action(); setIsMobileMenuOpen(false); }}
+                          className="flex items-center w-full text-left py-2 px-2 text-base text-gray-700 hover:bg-green-50 hover:text-green-800 transition-colors duration-150 rounded-md"
+                        >
+                          <span className="mr-3 text-lg" aria-hidden="true">{item.icon}</span>
+                          {item.name}
+                        </button>
+                      )
+                    ))}
                   </div>
-                  
-                  {profileMenuItems.map((item) => (
-                    <Link
-                      key={item.name}
-                      href={item.href}
-                      className="flex items-center py-2 px-2 text-base text-gray-700 hover:bg-green-50 hover:text-green-800 transition-colors duration-150 rounded-md"
-                      onClick={() => setIsMobileMenuOpen(false)}
-                    >
-                      <span className="mr-3 text-lg" aria-hidden="true">{item.icon}</span>
-                      {item.name}
-                    </Link>
-                  ))}
-                </div>
+                )}
               </div>
             </div>
           </div>
