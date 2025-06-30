@@ -1,5 +1,6 @@
 // components/CarrinhoSidebar.jsx
 'use client';
+import Link from 'next/link';
 import { useState, useEffect } from "react"; // Mantenha useEffect se tiver alguma lógica de UI que dependa de props, mas remova useAuth, useCallback etc.
 
 export default function CarrinhoSidebar({ aberto, itens = [], onClose, onRemoverItem }) {
@@ -98,11 +99,17 @@ export default function CarrinhoSidebar({ aberto, itens = [], onClose, onRemover
             <span className="font-medium text-gray-700">Total:</span>
             <span className="text-lg font-bold text-green-700">R$ {calcularTotal()}</span>
           </div>
+          <Link href="comprar">
+          
+         
           <button
             className="w-full py-3 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors font-medium"
           >
-            Finalizar Compra
+           
+            Finalizar Compra 
           </button>
+
+          </Link>
         </div>
       )}
     </div>

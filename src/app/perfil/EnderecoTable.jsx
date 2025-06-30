@@ -1,7 +1,7 @@
 // perfil/enderecoTable.jsx
 "use client";
 import { useState, useEffect } from 'react';
-import { EnderecoService } from '@/services/EnderecoService'; // Ajuste o caminho
+import  EnderecoService  from '@/services/EnderecoService'; // Ajuste o caminho
 import { useAuth } from '@/hooks/ContextoAuth'; // Ajuste o caminho
 import axios from 'axios'; // Para tratamento de erros do Axios
 import MineDataTable from '@/components/MineDataTable'; // Certifique-se de que este caminho está correto

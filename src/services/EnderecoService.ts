@@ -14,7 +14,7 @@ interface Endereco {
   updated_at?: string;
 }
 
-export class EnderecoService extends BaseService {
+export default class EnderecoService extends BaseService {
   private static axiosInstance = this.createAxiosInstance('enderecos');
 
   static async listarPorUsuario(usuarioId: number): Promise<Endereco[]> {

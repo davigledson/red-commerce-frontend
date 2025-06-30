@@ -4,7 +4,7 @@ import Footer from '../../components/Footer';
 import { AuthProvider } from '@/hooks/ContextoAuth';
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-
+import { ToastProvider } from '@/hooks/ContextoToast';
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -34,9 +34,11 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
            <AuthProvider>
+             <ToastProvider>
          <Navbar />
         {children}
         <Footer />
+        </ToastProvider>
         </AuthProvider>
       </body>
     </html>

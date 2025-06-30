@@ -66,14 +66,17 @@ export default function Navbar() {
     logout();
   };
 
-  const profileMenuItems = [
-    { name: 'Meu Perfil', href: '/perfil', icon: '👤', description: 'Gerencie suas informações' },
-    { name: 'Meus Pedidos', href: '/pedidos', icon: '📦', description: 'Acompanhe seus pedidos' },
-    { name: 'Favoritos', href: '/favoritos', icon: '💖', description: 'Seus produtos favoritos' },
-    { name: 'Configurações', href: '/configuracoes', icon: '⚙️', description: 'Configurações da conta' },
+    const profileMenuItems = [
+    { name: 'Meu Perfil', href: '/perfil?tab=personal', icon: '👤', description: 'Gerencie suas informações' }, // Adicionado ?tab=personal
+    { name: 'Meus Pedidos', href: '/perfil?tab=orders', icon: '📦', description: 'Acompanhe seus pedidos' },     // Adicionado ?tab=orders
+    { name: 'Favoritos', href: '/perfil?tab=favorites', icon: '💖', description: 'Seus produtos favoritos' },   // Adicionado ?tab=favorites
+    { name: 'Meus Endereços', href: '/perfil?tab=address', icon: '🏠', description: 'Gerencie seus endereços' }, // Adicionado ?tab=address
+    { name: 'Meu Carrinho', href: '/perfil?tab=cart', icon: '🛒', description: 'Itens no seu carrinho' },       // Adicionado ?tab=cart
+    { name: 'Configurações', href: '/perfil?tab=settings', icon: '⚙️', description: 'Configurações da conta' }, // Adicionado ?tab=settings
     { name: 'Ajuda', href: '/ajuda', icon: '❓', description: 'Centro de ajuda' },
     { name: 'Sair', action: handleLogout, icon: '🚪', description: 'Sair da conta' }, 
   ];
+
 
   const navigationItems = [
     { name: 'Home', href: '/' },
