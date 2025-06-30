@@ -19,7 +19,7 @@ interface RegistroDados {
   papel: 'cliente' | 'admin';
 }
 
-export class AuthService extends BaseService {
+export default class AuthService extends BaseService {
   private static axiosInstance = this.createAxiosInstance('auth');
 
   static async login(email: string, password: string): Promise<{ usuario: Usuario; token: string }> {

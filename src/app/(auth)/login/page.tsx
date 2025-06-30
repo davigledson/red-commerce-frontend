@@ -1,7 +1,7 @@
 // components/Login.jsx
 "use client";
 import { useState } from 'react';
-import { AuthService } from '@/services/AuthService';
+import AuthService from '@/services/AuthService';
 import axios from 'axios';
 import { useRouter } from 'next/navigation'; // Ou 'next/router'
 import { useAuth } from '@/hooks/ContextoAuth'; // Importe o hook useAuth
