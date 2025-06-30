@@ -48,7 +48,7 @@ export default function SideNav({ isOpen, onToggle }) {
     router.push('/login'); // Redireciona para a página de login após o logout
   };
 
-  // Configuração dos itens do menu SIMPLIFICADA
+  // Configuração dos itens do menu
   const menuItems = [
     {
       key: 'dashboard',
@@ -64,45 +64,45 @@ export default function SideNav({ isOpen, onToggle }) {
     {
       key: 'produtos',
       title: 'Produtos',
+      href: '/admin/produtos',
       icon: (
         <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
         </svg>
       ),
-      submenu: [
-        { title: 'Listar Produtos', href: '/admin/produtos' },
-        // { title: 'Adicionar Produto', href: '/admin/produtos/novo' }, // Removido para simplificar
-        { title: 'Categorias', href: '/admin/categorias' },
-        // { title: 'Estoque', href: '/admin/produtos/estoque' } // Removido para simplificar
-      ]
     },
-    // { // Removido para simplificar
-    //   key: 'pedidos',
-    //   title: 'Pedidos',
-    //   icon: (
-    //     <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    //       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-    //     </svg>
-    //   ),
-    //   submenu: [
-    //     { title: 'Todos os Pedidos', href: '/admin/pedidos' },
-    //     { title: 'Pendentes', href: '/admin/pedidos/pendentes' },
-    //     { title: 'Em Processamento', href: '/admin/pedidos/processamento' },
-    //     { title: 'Enviados', href: '/admin/pedidos/enviados' },
-    //     { title: 'Entregues', href: '/admin/pedidos/entregues' }
-    //   ]
-    // },
+    {
+      key: 'categorias',
+      title: 'Categorias',
+      href: '/admin/categorias',
+      icon: (
+        <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+        </svg>
+      ),
+    },
+    
+    {
+      key: 'pedidos',
+      title: 'Pedidos',
+      href: '/admin/pedidos',
+      icon: (
+        <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+        </svg>
+      ),
+     
+    },
     {
       key: 'clientes',
-      title: 'Usuários', // Renomeado para "Usuários"
-      href: '/admin/usuarios', // Assumindo que a rota é /admin/usuarios
+      title: 'Usuários',
+      href: '/admin/usuarios',
       icon: (
         <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
         </svg>
       ),
     },
-    // Removidos para simplificar: Financeiro, Marketing, Configurações
   ];
 
   const isActiveLink = (href) => {
@@ -274,7 +274,10 @@ export default function SideNav({ isOpen, onToggle }) {
                 </div>
               </div>
               
-              <button className="w-full mt-3 flex items-center space-x-3 px-4 py-2 text-gray-600 hover:bg-red-50 hover:text-red-600 rounded-lg transition-colors">
+              <button 
+                onClick={handleLogout}
+                className="w-full mt-3 flex items-center space-x-3 px-4 py-2 text-gray-600 hover:bg-red-50 hover:text-red-600 rounded-lg transition-colors"
+              >
                 <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                 </svg>
@@ -291,6 +294,7 @@ export default function SideNav({ isOpen, onToggle }) {
               </div>
               
               <button 
+                onClick={handleLogout}
                 className="p-2 text-gray-600 hover:bg-red-50 hover:text-red-600 rounded-lg transition-colors"
                 title="Sair"
               >

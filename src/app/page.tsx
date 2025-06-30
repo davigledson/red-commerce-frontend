@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from 'react'
+import Link from 'next/link'; 
 
 export default function Home() {
   const [isLoaded, setIsLoaded] = useState(false)
@@ -197,6 +198,7 @@ export default function Home() {
           flexWrap: 'wrap',
           animation: 'fadeInUp 1.5s ease-out 1s both'
         }}>
+          <Link href="produtos">
           <button style={{
             padding: '1rem 2.5rem',
             fontSize: '1.1rem',
@@ -222,7 +224,7 @@ export default function Home() {
           }}>
             🛒 Ver Plantas
           </button>
-
+          </Link>
           <button style={{
             padding: '1rem 2.5rem',
             fontSize: '1.1rem',
