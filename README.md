@@ -29,11 +29,7 @@ red-commerce/
 │   ├── components/
 │   ├── public/
 │   └── package.json
-└── backend/           # API Ruby on Rails
-    ├── app/
-    ├── config/
-    ├── db/
-    └── Gemfile
+
 ```
 
 ## 🛠️ Instalação e Configuração
