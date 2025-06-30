@@ -4,11 +4,11 @@ import { useState, useEffect } from 'react';
 import WidgetStart from '@/components/WidgetStart';
 import Header from '@/components/dashboard/Header';
 
-// Simulando serviços - você pode substituir pelos seus serviços reais
+// Importe seus serviços reais
 import CategoriaService from '@/services/CategoriaService';
-// import ProdutoService from '@/services/ProdutoService';
-// import UsuarioService from '@/services/UsuarioService';
-// import VendaService from '@/services/VendaService';
+import ProdutoService from '@/services/ProdutoService';
+import UsuarioService from '@/services/UsuarioService';
+import PedidoService from '@/services/PedidoService';
 
 export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
@@ -17,8 +17,8 @@ export default function AdminDashboard() {
     categorias: 0,
     produtos: 0,
     usuarios: 0,
-    vendas: 0,
-    vendasHoje: 0,
+    vendas: 0, // Total de pedidos
+    vendasHoje: 0, // Pedidos entregues hoje (ou outro critério)
     faturamentoMes: 0,
     produtosMaisVendidos: [],
     vendasRecentes: []
@@ -30,43 +30,47 @@ export default function AdminDashboard() {
       try {
         setLoading(true);
         
-        // Carrega categorias (exemplo real)
+        // Chamadas reais aos serviços
         const categorias = await CategoriaService.listarTodos();
+        const produtos = await ProdutoService.listarTodos(); // Busca todos os produtos
+        const usuarios = await UsuarioService.listarTodos(); // Busca todos os usuários
+        const totalVendas = await PedidoService.contarPedidos(); // Mantém esta, pois é uma contagem específica
+        const faturamentoMes = await PedidoService.faturamentoMesAtual();
+        const produtosMaisVendidos = await PedidoService.produtosMaisVendidos();
+        const vendasRecentes = await PedidoService.vendasRecentes();
         
-        // Simula outros dados - substitua pelas chamadas reais dos seus serviços
-        const produtos = 150; // await ProdutoService.contar();
-        const usuarios = 89; // await UsuarioService.contar();
-        const vendas = 234; // await VendaService.contar();
-        const vendasHoje = 12; // await VendaService.contarHoje();
-        const faturamentoMes = 45678.90; // await VendaService.faturamentoMes();
-        
-        // Dados mockados para produtos mais vendidos
-        const produtosMaisVendidos = [
-          { id: 1, nome: 'Produto A', vendas: 45, categoria: 'Eletrônicos' },
-          { id: 2, nome: 'Produto B', vendas: 38, categoria: 'Roupas' },
-          { id: 3, nome: 'Produto C', vendas: 29, categoria: 'Casa' },
-          { id: 4, nome: 'Produto D', vendas: 25, categoria: 'Esportes' },
-          { id: 5, nome: 'Produto E', vendas: 22, categoria: 'Livros' }
-        ];
+        // Para 'vendasHoje', você pode precisar de uma rota específica no backend
+        // Por enquanto, vamos usar uma contagem de pedidos 'entregue' ou 'finalizado' de hoje
+        // Ou você pode adaptar a rota 'vendas_recentes' para filtrar por data
+        const vendasHoje = vendasRecentes.filter(venda => {
+          const vendaDate = new Date(venda.data);
+          const today = new Date();
+          return vendaDate.getDate() === today.getDate() &&
+                 vendaDate.getMonth() === today.getMonth() &&
+                 vendaDate.getFullYear() === today.getFullYear();
+        }).length;
 
-        // Dados mockados para vendas recentes
-        const vendasRecentes = [
-          { id: 1, cliente: 'João Silva', produto: 'Smartphone XYZ', valor: 899.90, data: new Date() },
-          { id: 2, cliente: 'Maria Santos', produto: 'Notebook ABC', valor: 2499.00, data: new Date(Date.now() - 3600000) },
-          { id: 3, cliente: 'Pedro Costa', produto: 'Fone Bluetooth', valor: 199.90, data: new Date(Date.now() - 7200000) },
-          { id: 4, cliente: 'Ana Lima', produto: 'Camiseta Premium', valor: 79.90, data: new Date(Date.now() - 10800000) },
-          { id: 5, cliente: 'Carlos Oliveira', produto: 'Livro Técnico', valor: 59.90, data: new Date(Date.now() - 14400000) }
-        ];
 
         setDashboardData({
-          categorias: categorias.length,
-          produtos,
-          usuarios,
-          vendas,
-          vendasHoje,
-          faturamentoMes,
-          produtosMaisVendidos,
-          vendasRecentes
+          categorias: categorias.length, // Usa .length
+          produtos: produtos.length,     // Usa .length
+          usuarios: usuarios.length,     // Usa .length
+          vendas: totalVendas,
+          vendasHoje: vendasHoje,
+          faturamentoMes: faturamentoMes,
+          produtosMaisVendidos: produtosMaisVendidos.map(p => ({
+            id: p.id,
+            nome: p.nome,
+            vendas: p.total_vendido, // Adapte conforme o retorno do backend
+            categoria: p.categoria?.nome || 'N/A' // Adapte se o backend retornar categoria
+          })),
+          vendasRecentes: vendasRecentes.map(venda => ({
+            id: venda.id,
+            cliente: venda.cliente,
+            produto: venda.produto,
+            valor: venda.valor,
+            data: new Date(venda.data) // Converte para objeto Date
+          }))
         });
         
       } catch (err) {
@@ -304,7 +308,7 @@ export default function AdminDashboard() {
 
         {/* Ações Rápidas */}
         <div className="mt-10 bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-          <h3 className="text-xl font-semibold text-gray-900 mb-6">Ações Rápidas</h3>
+          <h3 className="text-xl font-semibold text-gray-900">Ações Rápidas</h3>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             
             <button className="p-4 bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded-xl hover:from-purple-600 hover:to-blue-600 transition-all duration-200 transform hover:scale-105">
