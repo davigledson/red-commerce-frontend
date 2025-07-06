@@ -12,6 +12,7 @@ export default function FavoritosTable() {
   const [favoritos, setFavoritos] = useState([]);
   const [loadingFavoritos, setLoadingFavoritos] = useState(true);
   const [errorFavoritos, setErrorFavoritos] = useState(null);
+  const [removingIds, setRemovingIds] = useState(new Set()); // Track items being removed
 
   // Função para carregar os favoritos do usuário
   const fetchFavoritos = useCallback(async () => {
@@ -59,16 +60,56 @@ export default function FavoritosTable() {
   const removerDosFavoritos = async (favoritoId) => {
     if (!confirm('Tem certeza que deseja remover este item dos favoritos?')) return;
 
-    setLoadingFavoritos(true);
+    // Check if item is already being removed
+    if (removingIds.has(favoritoId)) {
+      return;
+    }
+
+    // Add to removing set to prevent double clicks
+    setRemovingIds(prev => new Set([...prev, favoritoId]));
+
     try {
       await FavoritoService.remover(favoritoId);
-      await fetchFavoritos(); // Recarrega a lista
-      // Opcional: addToast("Item removido dos favoritos.", "success");
+      
+      // Remove item from local state immediately for better UX
+      setFavoritos(prev => prev.filter(fav => fav.id !== favoritoId));
+      
+      // Optional: show success message
+      console.log("Item removido dos favoritos com sucesso.");
+      
     } catch (err) {
       console.error("Erro ao remover dos favoritos:", err);
-      // Opcional: addToast("Erro ao remover item dos favoritos.", "error");
+      
+      // Handle different types of errors
+      let errorMessage = "Erro ao remover item dos favoritos.";
+      
+      if (axios.isAxiosError(err)) {
+        if (err.response?.status === 404) {
+          // Item not found - remove from local state anyway since it doesn't exist
+          setFavoritos(prev => prev.filter(fav => fav.id !== favoritoId));
+          errorMessage = "Item já foi removido dos favoritos.";
+          console.log(errorMessage);
+          return; // Don't show error for 404
+        } else if (err.response?.data?.error) {
+          errorMessage = err.response.data.error;
+        } else if (err.response?.data?.errors) {
+          errorMessage = err.response.data.errors.join(', ');
+        }
+      }
+      
+      // Show error message (you can replace with toast notification)
+      alert(errorMessage);
+      
+      // Optionally reload the list to sync with server
+      await fetchFavoritos();
+      
     } finally {
-      setLoadingFavoritos(false);
+      // Remove from removing set
+      setRemovingIds(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(favoritoId);
+        return newSet;
+      });
     }
   };
 
@@ -142,9 +183,14 @@ export default function FavoritosTable() {
                 </button> */}
                 <button
                   onClick={() => removerDosFavoritos(row.id)}
-                  className="text-red-600 hover:text-red-900"
+                  disabled={removingIds.has(row.id)}
+                  className={`${
+                    removingIds.has(row.id) 
+                      ? 'text-gray-400 cursor-not-allowed' 
+                      : 'text-red-600 hover:text-red-900'
+                  }`}
                 >
-                  Remover
+                  {removingIds.has(row.id) ? 'Removendo...' : 'Remover'}
                 </button>
               </>
             )}

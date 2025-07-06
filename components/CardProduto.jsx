@@ -25,7 +25,7 @@ export default function CardProduto({
       if (loggedInUser && id) {
         try {
           // Assumindo que FavoritoService.isFavorito precisa do ID do usuário e do produto
-          const isFav = await FavoritoService.isFavorito(loggedInUser.id, id);
+          const isFav = await FavoritoService.verificarFavorito(loggedInUser.id, id);
           setIsFavorited(isFav);
         } catch (error) {
           console.error("Erro ao verificar status de favorito:", error);
